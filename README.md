@@ -1,9 +1,9 @@
 # 飞牛番组管家
 自动同步飞牛影视观看记录至 Bangumi
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Docker Pulls](https://img.shields.io/docker/pulls/leclerca/fn-bangumi-sync)](https://hub.docker.com/r/leclerca/fn-bangumi-sync)
 ---
-
 <img width="2520" height="1344" alt="73180712849576c5a1913fd418e7805a" src="https://github.com/user-attachments/assets/5172549b-8ea3-4321-99fa-9a40687ee27f" />
 
 
