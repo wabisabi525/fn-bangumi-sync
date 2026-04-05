@@ -80,7 +80,7 @@ docker-compose up -d
 
 ---
 
-## 💻 技术基石
+## 💻 技术实现
 
 * **轻量容器**：基于 `Python 3.11-alpine` 极简镜像构建，无冗余依赖。
 * **高效驱动**：`Flask` 提供核心路由处理，`APScheduler` 掌控非阻塞定时任务。
