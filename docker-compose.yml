@@ -1,0 +1,16 @@
+services:
+  fn-bangumi-sync:
+    container_name: fn-bangumi-sync
+    image: 你的真实用户名/fn-bangumi-sync:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      # 挂载飞牛影视底层数据库 (只读模式绝对安全)
+      - /usr/local/apps/@appdata/trim.media/database:/db:ro
+      # 挂载本地配置文件与同步记忆库
+      - ./config.json:/app/config.json
+      - ./synced.json:/app/synced.json
+    environment:
+      - TZ=Asia/Shanghai
+      - DB_PATH=/db/trimmedia.db
+    restart: unless-stopped
