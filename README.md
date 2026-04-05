@@ -1,10 +1,5 @@
 # 飞牛番组管家
 飞牛番组管家 - 自动同步飞牛影视观看记录至 Bangumi
-
-# 🏮 飞牛番组管家 (FN-Sync)
-
-> 专为飞牛影视 (fnOS) 打造的自动追番同步工具。无感读取底层数据库，将观看进度精准推送至 [Bangumi 番组计划](https://bgm.tv/)。
-
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Docker Pulls](https://img.shields.io/docker/pulls/你的DockerHub用户名/fn-bangumi-sync)](https://hub.docker.com/r/你的DockerHub用户名/fn-bangumi-sync)
 
