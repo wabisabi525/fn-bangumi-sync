@@ -1,7 +1,7 @@
 services:
   fn-bangumi-sync:
     container_name: fn-bangumi-sync
-    image: 你的真实用户名/fn-bangumi-sync:latest
+    image: leclerca/fn-bangumi-sync:latest
     ports:
       - "5000:5000"
     volumes:
