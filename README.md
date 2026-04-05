@@ -1,2 +1,2 @@
-# fn-bangumi-sync
+# fn-bangumi-sync 飞牛番组管家
 飞牛番组管家 - 自动同步飞牛影视观看记录至 Bangumi
