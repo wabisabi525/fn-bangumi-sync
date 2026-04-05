@@ -3,8 +3,6 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Docker Pulls](https://img.shields.io/docker/pulls/leclerca/fn-bangumi-sync)](https://hub.docker.com/r/leclerca/fn-bangumi-sync)
-
-
 ---
 
 ## 🎯 核心特性
