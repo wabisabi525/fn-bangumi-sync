@@ -4,8 +4,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Docker Pulls](https://img.shields.io/docker/pulls/leclerca/fn-bangumi-sync)](https://hub.docker.com/r/leclerca/fn-bangumi-sync)
 
-<img width="2520" height="1344" alt="73180712849576c5a1913fd418e7805a" src="https://github.com/user-attachments/assets/59588044-118b-4b16-af6b-71388f6bde3c" />
-
 
 ---
 
