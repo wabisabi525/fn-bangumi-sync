@@ -5,6 +5,9 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/leclerca/fn-bangumi-sync)](https://hub.docker.com/r/leclerca/fn-bangumi-sync)
 ---
 
+<img width="2520" height="1344" alt="73180712849576c5a1913fd418e7805a" src="https://github.com/user-attachments/assets/5172549b-8ea3-4321-99fa-9a40687ee27f" />
+
+
 ## 🎯 核心特性
 
 打通本地媒体库与云端追番记录的隔阂，实现飞牛观看、云端秒刷。
