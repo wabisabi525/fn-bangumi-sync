@@ -85,7 +85,7 @@ docker-compose up -d
 
 * **轻量容器**：基于 `Python 3.11-alpine` 极简镜像构建，无冗余依赖。
 * **高效驱动**：`Flask` 提供核心路由处理，`APScheduler` 掌控非阻塞定时任务。
-* **纯粹前端**：抛弃繁重框架，采用原生 HTML5/ES6 结合 Jinja2 模板直出。
+* **干净前端**：抛弃繁重框架，采用原生 HTML5/ES6 结合 Jinja2 模板直出。
 
 ---
 
