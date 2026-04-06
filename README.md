@@ -29,7 +29,7 @@
 
 **1. 创建挂载目录与空文件**
 
-在此项目文件夹下，创建 `config.json` 和 `synced.json`两个空文件
+在此项目文件夹下，创建 `config.json` 和 `synced.json`两个空文件，否则会报错
 ```bash
 mkdir -p /vol1/docker/fn-bangumi-sync
 cd /vol1/docker/fn-bangumi-sync
