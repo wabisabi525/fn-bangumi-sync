@@ -91,7 +91,7 @@ docker-compose up -d
 
 ## 💝 鸣谢
 
-本项目的挂载思路与安全策略，深受以下开源项目的启发，特此致谢：
+本项目的挂载思路深受以下开源项目的启发，特此致谢：
 * [fntv-record-view](https://github.com/QiaoKes/fntv-record-view) - 飞牛影视历史管理系统
 
 ---
