@@ -28,7 +28,7 @@
 ### 💡 快速开始
 
 **1. 创建挂载目录与空文件**
-建立配置文件夹并初始化存储文件（防止 Docker 误认其为目录）：
+建立配置文件夹并初始化存储文件：
 ```bash
 mkdir -p /vol1/docker/fn-bangumi-sync
 cd /vol1/docker/fn-bangumi-sync
