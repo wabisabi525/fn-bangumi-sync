@@ -28,7 +28,7 @@
 ### 💡 快速开始
 
 **1. 创建挂载目录与空文件**
-创建 `config.json` 和 `synced.json`文件
+首先创建 `config.json` 和 `synced.json`空文件
 ```bash
 mkdir -p /vol1/docker/fn-bangumi-sync
 cd /vol1/docker/fn-bangumi-sync
