@@ -28,6 +28,7 @@
 ### 💡 快速开始
 
 **1. 创建挂载目录与空文件**
+
 创建 `config.json` 和 `synced.json`两个空文件
 ```bash
 mkdir -p /vol1/docker/fn-bangumi-sync
@@ -36,6 +37,7 @@ touch config.json synced.json
 ```
 
 **2. 编写部署文件**
+
 新建 `docker-compose.yml`，并填入以下参数：
 ```yaml
 services:
