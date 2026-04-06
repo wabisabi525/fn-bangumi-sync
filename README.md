@@ -23,7 +23,7 @@
 
 ### 📌 部署准备
 * 拥有 SSH 权限的飞牛 NAS 系统。
-* 获取 Bangumi 的 [个人 Access Token]([https://next.bgm.tv/demo/access-token])。
+* 获取 Bangumi 的 [个人 Access Token](https://next.bgm.tv/demo/access-token)。
 
 ### 💡 快速开始
 
