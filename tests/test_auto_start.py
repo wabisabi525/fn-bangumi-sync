@@ -1,4 +1,4 @@
-import os
+﻿import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -119,8 +119,12 @@ class WebUiContractTests(unittest.TestCase):
 
         self.assertIn('id="autoStartOnBoot"', html)
         self.assertIn("updateSyncMode('boot')", html)
-        self.assertIn('auto_start_on_boot: bootToggle.checked', html)
+        self.assertIn('auto_start_on_boot:bootToggle.checked', html)
         self.assertIn("updateSyncMode('mode')", html)
+        self.assertIn('class="workspace-sidebar"', html)
+        self.assertIn('<h1>飞牛番组管家</h1>', html)
+        self.assertIn('自动同步观看记录 | 飞牛影视 → Bangumi', html)
+        self.assertNotIn('FN Bangumi Sync', html)
 
 
 if __name__ == '__main__':
