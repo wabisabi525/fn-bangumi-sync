@@ -30,6 +30,11 @@ class SyncManager:
         self.scheduler_job = None
         self.last_sync_time = None
         self.synced = self.load_cache()
+        if self.config.get('auto_start_on_boot', False):
+            self.config['sync_mode'] = 'auto'
+            self.start_auto_sync()
+        else:
+            self.config['sync_mode'] = 'manual'
     def load_cache(self):
         try:
             with open('synced.json', 'r') as f: return json.load(f)
@@ -41,7 +46,7 @@ class SyncManager:
         if self.config.get('sync_mode') == 'auto': self.start_auto_sync()
         
     def load_config(self):
-        default = {'bangumi_token': '', 'min_percent': 80, 'user_filter': 'all', 'time_range': 'all', 'sync_mode': 'manual', 'sync_interval': 300}
+        default = {'bangumi_token': '', 'min_percent': 80, 'user_filter': 'all', 'time_range': 'all', 'sync_mode': 'manual', 'sync_interval': 300, 'auto_start_on_boot': False}
         if os.path.exists(CONFIG_FILE):
             try:
                 with open(CONFIG_FILE, 'r') as f: return {**default, **json.load(f)}
@@ -49,6 +54,9 @@ class SyncManager:
         return default
 
     def save_config(self, data):
+        if 'auto_start_on_boot' in data or 'sync_mode' in data:
+            auto_start_on_boot = bool(data.get('auto_start_on_boot', data.get('sync_mode') == 'auto'))
+            data = {**data, 'auto_start_on_boot': auto_start_on_boot, 'sync_mode': 'auto' if auto_start_on_boot else 'manual'}
         self.config.update(data)
         try:
             with open(CONFIG_FILE, 'w') as f: json.dump(self.config, f, indent=2)
@@ -169,7 +177,7 @@ class SyncManager:
             self.run_sync(user_guid=self.config.get('user_filter', 'all'), time_range=self.config.get('time_range', 'all'))
     
     def get_sync_status(self):
-        return {'mode': self.config.get('sync_mode', 'manual'), 'is_running': self.scheduler.running, 'has_job': self.scheduler_job is not None, 'last_sync_time': self.last_sync_time, 'syncing_now': self.syncing}
+        return {'mode': self.config.get('sync_mode', 'manual'), 'auto_start_on_boot': self.config.get('auto_start_on_boot', False), 'is_running': self.scheduler.running, 'has_job': self.scheduler_job is not None, 'last_sync_time': self.last_sync_time, 'syncing_now': self.syncing}
 
     def _do_search(self, kw):
         headers = {'Authorization': f"Bearer {self.config.get('bangumi_token', '')}", 'User-Agent': 'fn-sync/2.0'}
@@ -310,7 +318,17 @@ def stop(): manager._stop.set(); return jsonify({'ok': True})
 def sync_status(): return jsonify(manager.get_sync_status())
 @app.route('/api/sync/mode', methods=['POST'])
 def set_sync_mode():
-    manager.save_config({'sync_mode': request.json.get('mode', 'manual'), 'sync_interval': request.json.get('interval', 300)})
+    data = request.json or {}
+    mode = data.get('mode', 'manual')
+    auto_start_on_boot = data.get('auto_start_on_boot')
+    if auto_start_on_boot is None:
+        auto_start_on_boot = mode == 'auto'
+    auto_start_on_boot = bool(auto_start_on_boot)
+    manager.save_config({
+        'sync_mode': 'auto' if auto_start_on_boot else 'manual',
+        'sync_interval': data.get('interval', 300),
+        'auto_start_on_boot': auto_start_on_boot
+    })
     return jsonify({'ok': True})
 @app.route('/api/status')
 def status(): return jsonify({'syncing': manager.syncing, 'db_ok': os.path.exists(DB_PATH)})

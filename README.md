@@ -3,6 +3,8 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Docker Pulls](https://img.shields.io/docker/pulls/leclerca/fn-bangumi-sync)](https://hub.docker.com/r/leclerca/fn-bangumi-sync)
+[![GitHub Actions](https://github.com/wabisabi525/fn-bangumi-sync/actions/workflows/tests.yml/badge.svg)](https://github.com/wabisabi525/fn-bangumi-sync/actions/workflows/tests.yml)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/wabisabi525/fn-bangumi-sync/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/wabisabi525/fn-bangumi-sync/tree/main)
 ---
 <img width="2520" height="1344" alt="73180712849576c5a1913fd418e7805a" src="https://github.com/user-attachments/assets/5172549b-8ea3-4321-99fa-9a40687ee27f" />
 
@@ -88,6 +90,18 @@ docker-compose up -d
 * **轻量容器**：基于 `Python 3.11-alpine` 极简镜像构建，无冗余依赖。
 * **高效驱动**：`Flask` 提供核心路由处理，`APScheduler` 掌控非阻塞定时任务。
 * **干净前端**：抛弃繁重框架，采用原生 HTML5/ES6 结合 Jinja2 模板直出。
+
+---
+
+## 👀 Codex 可视化开发
+
+在 Codex 中说“打开本地 WebUI”，即可启动不连接 NAS、不读取真实 Token 的安全预览：
+
+```powershell
+.\scripts\start_preview.ps1
+```
+
+预览地址为 `http://127.0.0.1:5055`，包含模拟用户、播放记录和日志。使用 Codex 内置浏览器的 **Annotations** 工具可直接点选页面元素、填写修改意见或调整 CSS，再把标注发送给 Codex。预览进程退出后，临时配置会自动删除。
 
 ---
 

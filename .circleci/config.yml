@@ -1,0 +1,30 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - pip-v1-{{ checksum "requirements.txt" }}
+            - pip-v1-
+      - run:
+          name: Install dependencies
+          command: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+      - save_cache:
+          key: pip-v1-{{ checksum "requirements.txt" }}
+          paths:
+            - ~/.cache/pip
+      - run:
+          name: Check Python syntax
+          command: python -m compileall -q app.py tests
+      - run:
+          name: Run unit tests
+          command: python -m unittest discover -s tests -v
+
+workflows:
+  test:
+    jobs:
+      - test

@@ -46,6 +46,17 @@ th { background: #f9fafb; font-weight: 600; color: #666; }
 .sync-status .indicator { width: 10px; height: 10px; border-radius: 50%; }
 .sync-status .indicator.active { background: #10b981; animation: pulse 2s infinite; }
 .sync-status .indicator.inactive { background: #9ca3af; }
+.boot-sync-setting { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px; margin-bottom: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; }
+.boot-sync-copy { min-width: 0; }
+.boot-sync-title { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 3px; }
+.boot-sync-help { display: block; font-size: 12px; line-height: 1.4; color: #6b7280; }
+.switch { position: relative; display: inline-block; width: 46px; height: 26px; flex: 0 0 auto; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; inset: 0; cursor: pointer; background: #cbd5e1; border-radius: 999px; transition: .2s; }
+.slider::before { content: ''; position: absolute; width: 20px; height: 20px; left: 3px; top: 3px; background: white; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: .2s; }
+.switch input:checked + .slider { background: #4f46e5; }
+.switch input:checked + .slider::before { transform: translateX(20px); }
+.switch input:focus-visible + .slider { box-shadow: 0 0 0 3px rgba(79,70,229,.2); }
 .toast-container { position: fixed; top: 75px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
 .toast { background: white; border-left: 4px solid #667eea; border-radius: 8px; padding: 15px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); font-size: 14px; color: #333; font-weight: 500; pointer-events: auto; }
 .toast.show { transform: translateX(0); }
@@ -86,6 +97,9 @@ body, .card, .status-item, .header, th, td, .filter-section, .sync-status, .form
 .dark-mode td, .dark-mode .perfect-align { border-bottom: 1px solid #282a32; }
 .dark-mode .filter-section { background: #15161b; border: 1px solid #282a32; }
 .dark-mode .sync-status { background: #121316; border: 1px solid #282a32; }
+.dark-mode .boot-sync-setting { background: #121316; border-color: #282a32; }
+.dark-mode .boot-sync-title { color: #f3f4f6; }
+.dark-mode .boot-sync-help { color: #9ca3af; }
 .dark-mode .btn-refresh { background-color: #282a32; color: #818cf8; border: 1px solid #374151; }
 .dark-mode .btn-refresh:hover { background-color: #3f4451; }
 .dark-mode .toast { background: #1c1d22; color: #f3f4f6; border-left-color: #6366f1; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
@@ -118,19 +132,29 @@ body, .card, .status-item, .header, th, td, .filter-section, .sync-status, .form
         <div class="sync-status"><div class="indicator inactive" id="syncIndicator"></div><span id="syncModeText">手动模式</span></div>
         <div class="form-group">
           <label>同步模式</label>
-          <select id="syncMode" onchange="updateSyncMode()">
+          <select id="syncMode" onchange="updateSyncMode('mode')">
             <option value="manual">手动同步</option>
             <option value="auto">自动同步</option>
           </select>
         </div>
         <div class="form-group" id="intervalGroup" style="display:none;">
           <label>同步间隔</label>
-          <select id="syncInterval" autocomplete="off" onchange="updateSyncMode(true)">
+          <select id="syncInterval" autocomplete="off" onchange="updateSyncMode('interval')">
             <option value="60" {% if config.get('sync_interval', 300) == 60 %}selected{% endif %}>1分钟</option>
             <option value="300" {% if config.get('sync_interval', 300) == 300 %}selected{% endif %}>5分钟</option>
             <option value="900" {% if config.get('sync_interval', 300) == 900 %}selected{% endif %}>15分钟</option>
             <option value="3600" {% if config.get('sync_interval', 300) == 3600 %}selected{% endif %}>1小时</option>
           </select>
+        </div>
+        <div class="boot-sync-setting">
+          <div class="boot-sync-copy">
+            <span class="boot-sync-title">容器启动后自动同步</span>
+            <span class="boot-sync-help">开启后切换为自动模式，并在容器重启后恢复定时任务。</span>
+          </div>
+          <label class="switch" aria-label="容器启动后自动同步">
+            <input type="checkbox" id="autoStartOnBoot" onchange="updateSyncMode('boot')">
+            <span class="slider"></span>
+          </label>
         </div>
         <button class="btn" id="btnSync" onclick="startSync()">🚀 立即同步</button>
         <button class="btn btn-red" id="btnStop" onclick="stopSync()" disabled>⏹ 停止</button>
@@ -242,6 +266,7 @@ async function loadSyncStatus() {
     const d = await r.json();
     if (d.mode) document.getElementById('syncMode').value = d.mode;
     if (d.interval) document.getElementById('syncInterval').value = String(d.interval);
+    document.getElementById('autoStartOnBoot').checked = d.auto_start_on_boot === true;
     
     if (d.mode === 'auto') { 
         document.getElementById('syncIndicator').className = 'indicator active'; 
@@ -256,12 +281,19 @@ async function loadSyncStatus() {
   } catch (e) { console.error(e); }
 }
 
-async function updateSyncMode() {
-  const mode = document.getElementById('syncMode').value, interval = parseInt(document.getElementById('syncInterval').value);
+async function updateSyncMode(source = 'mode') {
+  const modeSelect = document.getElementById('syncMode');
+  const bootToggle = document.getElementById('autoStartOnBoot');
+  if (source === 'boot') modeSelect.value = bootToggle.checked ? 'auto' : 'manual';
+  else if (source === 'mode') bootToggle.checked = modeSelect.value === 'auto';
+
+  const mode = bootToggle.checked ? 'auto' : 'manual';
+  modeSelect.value = mode;
+  const interval = parseInt(document.getElementById('syncInterval').value);
   const sel = document.getElementById('syncInterval'); const intervalText = sel.options[sel.selectedIndex].text;
-  await fetch('/api/sync/mode', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({mode, interval}) });
+  await fetch('/api/sync/mode', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({mode, interval, auto_start_on_boot: bootToggle.checked}) });
   loadSyncStatus();
-  if(mode === 'auto') showToast(`已开启自动同步 (间隔: ${intervalText})`); else showToast('已切换为手动模式');
+  if(mode === 'auto') showToast(`已开启自动同步，容器重启后将自动恢复 (间隔: ${intervalText})`); else showToast('已切换为手动模式，容器重启后不自动同步');
 }
 
 async function applyFilter() { 
