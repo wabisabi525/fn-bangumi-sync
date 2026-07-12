@@ -131,6 +131,10 @@ class WebUiContractTests(unittest.TestCase):
         self.assertIn('data-view="bangumi"', html)
         self.assertNotIn('href="#logs-panel"', html)
         self.assertIn('id="logs-panel"', html)
+        self.assertIn('bootstrap-icons.min.css', html)
+        self.assertIn('bi bi-grid-1x2-fill nav-icon', html)
+        self.assertNotIn('data-short=', html)
+        self.assertNotIn('episode_title', html)
 
 
 if __name__ == '__main__':

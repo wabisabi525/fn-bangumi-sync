@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>飞牛番组管家</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.min.css') }}">
 <style>
 :root {
   --bg: #f4f5f9;
@@ -35,8 +36,8 @@ button { cursor: pointer; }
 .app-shell.sidebar-collapsed .workspace-label, .app-shell.sidebar-collapsed .nav-label, .app-shell.sidebar-collapsed .sidebar-footer-copy { display: none; }
 .app-shell.sidebar-collapsed .workspace-head { justify-content: center; }
 .app-shell.sidebar-collapsed .sidebar-toggle { width: 42px; padding: 9px 0; }
-.app-shell.sidebar-collapsed .workspace-nav a { padding: 12px 6px; text-align: center; font-size: 0; }
-.app-shell.sidebar-collapsed .workspace-nav a::after { content: attr(data-short); font-size: 13px; font-weight: 750; }
+.app-shell.sidebar-collapsed .workspace-nav a { padding: 12px 6px; justify-content: center; }
+.app-shell.sidebar-collapsed .nav-icon { margin: 0; font-size: 18px; }
 .app-shell.sidebar-collapsed .sidebar-footer { padding-left: 0; padding-right: 0; }
 .app-shell.sidebar-collapsed .sidebar-footer-row { justify-content: center; }
 .workspace-sidebar { position: sticky; top: 28px; height: calc(100vh - 56px); background: var(--sidebar); color: #f4f2ff; border-radius: 24px; padding: 24px 18px; display: flex; flex-direction: column; box-shadow: 0 18px 45px rgba(39, 35, 63, .22); }
@@ -45,7 +46,8 @@ button { cursor: pointer; }
 .sidebar-toggle { border: 1px solid rgba(255,255,255,.13); background: rgba(255,255,255,.07); color: #d7d4e7; border-radius: 10px; padding: 7px 9px; font-size: 11px; font-weight: 700; transition: background .18s ease; }
 .sidebar-toggle:hover { background: rgba(255,255,255,.13); }
 .workspace-nav { display: grid; gap: 5px; }
-.workspace-nav a { color: var(--sidebar-muted); text-decoration: none; padding: 12px 14px; border-radius: 12px; font-size: 14px; font-weight: 650; transition: background .18s ease, color .18s ease, transform .18s ease; }
+.workspace-nav a { color: var(--sidebar-muted); text-decoration: none; padding: 12px 14px; border-radius: 12px; font-size: 14px; font-weight: 650; display: flex; align-items: center; gap: 11px; transition: background .18s ease, color .18s ease, transform .18s ease; }
+.nav-icon { width: 18px; flex: 0 0 18px; text-align: center; font-size: 16px; line-height: 1; }
 .workspace-nav a:hover { color: white; background: rgba(255,255,255,.08); transform: translateX(2px); }
 .workspace-nav a.active { background: var(--primary); color: #fff; box-shadow: 0 8px 18px rgba(101,87,232,.28); }
 .sidebar-footer { margin-top: auto; border-top: 1px solid rgba(255,255,255,.1); padding: 18px 10px 2px; }
@@ -189,10 +191,10 @@ body.dark-mode {
       <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="收缩工作区" title="收缩工作区"><span id="sidebarToggleText">收起</span></button>
     </div>
     <nav class="workspace-nav" id="workspaceNav">
-      <a href="#overview" class="active" data-view="dashboard" data-short="总" title="总览"><span class="nav-label">总览</span></a>
-      <a href="#records" data-view="dashboard" data-short="播" title="播放记录"><span class="nav-label">播放记录</span></a>
-      <a href="#sync-settings" data-view="dashboard" data-short="同" title="同步设置"><span class="nav-label">同步设置</span></a>
-      <a href="#bangumi-settings" data-view="bangumi" data-short="B" title="Bangumi"><span class="nav-label">Bangumi</span></a>
+      <a href="#overview" class="active" data-view="dashboard" title="总览"><i class="bi bi-grid-1x2-fill nav-icon" aria-hidden="true"></i><span class="nav-label">总览</span></a>
+      <a href="#records" data-view="dashboard" title="播放记录"><i class="bi bi-play-circle nav-icon" aria-hidden="true"></i><span class="nav-label">播放记录</span></a>
+      <a href="#sync-settings" data-view="dashboard" title="同步设置"><i class="bi bi-arrow-repeat nav-icon" aria-hidden="true"></i><span class="nav-label">同步设置</span></a>
+      <a href="#bangumi-settings" data-view="bangumi" title="Bangumi"><i class="bi bi-collection-play nav-icon" aria-hidden="true"></i><span class="nav-label">Bangumi</span></a>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-footer-row">
@@ -310,7 +312,7 @@ function showToast(msg) { const c=document.getElementById('toastContainer'); con
 async function init(){ await loadUsers(); await loadConfig(); await load(); await loadSyncStatus(); setInterval(getStatus,3000); setInterval(loadSyncStatus,5000); setInterval(load,60000); connectLogs(); initNavigation(); }
 async function loadConfig(){ try{const r=await fetch('/api/config?_t='+Date.now());const d=await r.json();if(d.bangumi_token)document.getElementById('token').value=d.bangumi_token;if(d.min_percent)document.getElementById('pct').value=d.min_percent;if(d.user_filter){document.getElementById('userSelect').value=d.user_filter;currentFilter.user=d.user_filter;}if(d.time_range){document.getElementById('timeRange').value=d.time_range;currentFilter.range=d.time_range;}}catch(e){} }
 async function loadUsers(){ try{const r=await fetch('/api/users');const d=await r.json();if(d.success&&d.data){const s=document.getElementById('userSelect');s.innerHTML='<option value="all">全部用户</option>';d.data.forEach(u=>{const o=document.createElement('option');o.value=u.id;o.textContent=u.name;s.appendChild(o);});if(currentFilter.user!=='all')s.value=currentFilter.user;}}catch(e){} }
-async function load(){ try{const r=await fetch('/api/records?user='+encodeURIComponent(currentFilter.user)+'&range='+encodeURIComponent(currentFilter.range));const d=await r.json();if(d.error)return;const tb=document.getElementById('tbody');tb.innerHTML='';let p=0;d.records.forEach(x=>{if(x.status==='已看完')p++;const tr=document.createElement('tr');tr.innerHTML='<td>'+x.play_time+'</td><td><strong>'+x.media_name+'</strong><div class="episode">'+(x.episode_title||'')+'</div></td><td>第 '+x.episode_num+' 集</td><td>'+x.percent+'%</td><td><span class="badge '+(x.status==='已看完'?'badge-green':'badge-yellow')+'">'+x.status+'</span></td>';tb.appendChild(tr);});document.getElementById('pendingCount').textContent=p;document.getElementById('dbStatus').textContent='正常';}catch(e){} }
+async function load(){ try{const r=await fetch('/api/records?user='+encodeURIComponent(currentFilter.user)+'&range='+encodeURIComponent(currentFilter.range));const d=await r.json();if(d.error)return;const tb=document.getElementById('tbody');tb.innerHTML='';let p=0;d.records.forEach(x=>{if(x.status==='已看完')p++;const tr=document.createElement('tr');tr.innerHTML='<td>'+x.play_time+'</td><td><strong>'+x.media_name+'</strong></td><td>第 '+x.episode_num+' 集</td><td>'+x.percent+'%</td><td><span class="badge '+(x.status==='已看完'?'badge-green':'badge-yellow')+'">'+x.status+'</span></td>';tb.appendChild(tr);});document.getElementById('pendingCount').textContent=p;document.getElementById('dbStatus').textContent='正常';}catch(e){} }
 async function getStatus(){ try{const r=await fetch('/api/status');const d=await r.json();const st=document.getElementById('syncState');if(d.syncing){st.textContent='同步中';st.classList.add('syncing');document.getElementById('btnSync').disabled=true;document.getElementById('btnStop').disabled=false;}else{st.textContent='空闲';st.classList.remove('syncing');document.getElementById('btnSync').disabled=false;document.getElementById('btnStop').disabled=true;}}catch(e){} }
 async function loadSyncStatus(){ try{const r=await fetch('/api/sync/status?_t='+Date.now());const d=await r.json();if(d.mode)document.getElementById('syncMode').value=d.mode;document.getElementById('autoStartOnBoot').checked=d.auto_start_on_boot===true;if(d.mode==='auto'){document.getElementById('syncModeText').textContent='自动模式';document.getElementById('syncModeNote').textContent='自动模式已开启';document.getElementById('intervalGroup').style.display='block';}else{document.getElementById('syncModeText').textContent='手动模式';document.getElementById('syncModeNote').textContent='手动模式';document.getElementById('intervalGroup').style.display='none';}if(d.last_sync_time)document.getElementById('lastSync').textContent=d.last_sync_time.split(' ')[1].substring(0,5);}catch(e){console.error(e);} }
 async function updateSyncMode(source='mode'){const modeSelect=document.getElementById('syncMode');const bootToggle=document.getElementById('autoStartOnBoot');if(source==='boot')modeSelect.value=bootToggle.checked?'auto':'manual';else if(source==='mode')bootToggle.checked=modeSelect.value==='auto';const mode=bootToggle.checked?'auto':'manual';modeSelect.value=mode;const interval=parseInt(document.getElementById('syncInterval').value);const sel=document.getElementById('syncInterval');const intervalText=sel.options[sel.selectedIndex].text;await fetch('/api/sync/mode',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode,interval,auto_start_on_boot:bootToggle.checked})});loadSyncStatus();showToast(mode==='auto'?'已开启自动同步，容器重启后将自动恢复（'+intervalText+'）':'已切换为手动模式，容器重启后不自动同步');}
