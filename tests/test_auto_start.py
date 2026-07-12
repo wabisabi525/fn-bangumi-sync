@@ -135,6 +135,9 @@ class WebUiContractTests(unittest.TestCase):
         self.assertIn('bi bi-grid-1x2-fill nav-icon', html)
         self.assertNotIn('data-short=', html)
         self.assertNotIn('episode_title', html)
+        self.assertNotIn('刷新记录', html)
+        self.assertIn('.workspace-nav a.active { background: var(--primary); color: #fff; box-shadow: none; }', html)
+        self.assertLess(html.index('id="logs-panel"'), html.index('id="filter-settings"'))
 
 
 if __name__ == '__main__':

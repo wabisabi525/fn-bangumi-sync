@@ -49,7 +49,7 @@ button { cursor: pointer; }
 .workspace-nav a { color: var(--sidebar-muted); text-decoration: none; padding: 12px 14px; border-radius: 12px; font-size: 14px; font-weight: 650; display: flex; align-items: center; gap: 11px; transition: background .18s ease, color .18s ease, transform .18s ease; }
 .nav-icon { width: 18px; flex: 0 0 18px; text-align: center; font-size: 16px; line-height: 1; }
 .workspace-nav a:hover { color: white; background: rgba(255,255,255,.08); transform: translateX(2px); }
-.workspace-nav a.active { background: var(--primary); color: #fff; }
+.workspace-nav a.active { background: var(--primary); color: #fff; box-shadow: none; }
 .sidebar-footer { margin-top: auto; border-top: 1px solid rgba(255,255,255,.1); padding: 18px 10px 2px; }
 .sidebar-footer-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .sidebar-footer-copy { min-width: 0; }
@@ -215,7 +215,6 @@ body.dark-mode {
         <p>自动同步观看记录 | 飞牛影视 → Bangumi</p>
       </div>
       <div class="header-actions">
-        <button class="btn btn-secondary" onclick="load()">刷新记录</button>
         <button class="btn btn-primary" onclick="startSync()">立即同步</button>
       </div>
     </header>
@@ -275,18 +274,17 @@ body.dark-mode {
           <div class="panel-heading"><h2>运行日志</h2><span class="terminal-state">实时</span></div>
           <div class="terminal" id="logs"></div>
         </section>
+
+        <section class="panel" id="filter-settings">
+          <div class="panel-heading"><h2>同步筛选</h2><span class="panel-meta">控制记录范围</span></div>
+          <div class="filter-box">
+            <div class="form-group"><label for="userSelect">选择用户</label><select id="userSelect" onchange="applyFilter()"><option value="all">全部用户</option></select></div>
+            <div class="form-group"><label for="timeRange">时间范围</label><select id="timeRange" onchange="applyFilter()"><option value="all">全部</option><option value="1month">最近1个月</option><option value="1week">最近一周</option><option value="1day">最近一天</option></select></div>
+          </div>
+        </section>
       </div>
     </div>
 
-    <div class="settings-grid single-column">
-      <section class="panel" id="filter-settings">
-        <div class="panel-heading"><h2>同步筛选</h2><span class="panel-meta">控制记录范围</span></div>
-        <div class="filter-box">
-          <div class="form-group"><label for="userSelect">选择用户</label><select id="userSelect" onchange="applyFilter()"><option value="all">全部用户</option></select></div>
-          <div class="form-group"><label for="timeRange">时间范围</label><select id="timeRange" onchange="applyFilter()"><option value="all">全部</option><option value="1month">最近1个月</option><option value="1week">最近一周</option><option value="1day">最近一天</option></select></div>
-        </div>
-      </section>
-    </div>
     </div>
 
     <section class="page-view bangumi-page" id="bangumiPage" hidden>
