@@ -125,6 +125,12 @@ class WebUiContractTests(unittest.TestCase):
         self.assertIn('<h1>飞牛番组管家</h1>', html)
         self.assertIn('自动同步观看记录 | 飞牛影视 → Bangumi', html)
         self.assertNotIn('FN Bangumi Sync', html)
+        self.assertIn('id="sidebarToggle"', html)
+        self.assertIn('function toggleSidebar()', html)
+        self.assertIn('id="bangumiPage" hidden', html)
+        self.assertIn('data-view="bangumi"', html)
+        self.assertNotIn('href="#logs-panel"', html)
+        self.assertIn('id="logs-panel"', html)
 
 
 if __name__ == '__main__':
