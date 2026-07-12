@@ -139,8 +139,11 @@ class WebUiContractTests(unittest.TestCase):
         self.assertIn('.workspace-nav a.active { background: var(--primary); color: #fff; box-shadow: none; }', html)
         self.assertLess(html.index('id="filter-settings"'), html.index('id="logs-panel"'))
         self.assertIn('id="sidebarToggleText"', html)
-        self.assertIn('grid-template-columns .28s cubic-bezier', html)
-        self.assertIn('max-width .28s ease', html)
+        self.assertIn('grid-template-columns .32s cubic-bezier', html)
+        self.assertIn('max-width .3s cubic-bezier', html)
+        self.assertIn('id="sidebarToggleIcon"', html)
+        self.assertIn('id="themeButtonText"', html)
+        self.assertIn('border-radius: 50%; justify-content: center; gap: 0;', html)
 
 
 if __name__ == '__main__':
