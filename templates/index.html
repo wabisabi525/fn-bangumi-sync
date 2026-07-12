@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>飞牛番组管家</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.min.css') }}">
 <style>
 :root {
   --bg: #f4f5f9;
@@ -32,11 +33,11 @@ button { cursor: pointer; }
 .app-shell { min-height: 100vh; padding: 28px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 26px; transition: grid-template-columns .22s ease; }
 .app-shell.sidebar-collapsed { grid-template-columns: 76px minmax(0, 1fr); }
 .app-shell.sidebar-collapsed .workspace-sidebar { padding-left: 10px; padding-right: 10px; }
-.app-shell.sidebar-collapsed .workspace-label, .app-shell.sidebar-collapsed .nav-label, .app-shell.sidebar-collapsed .sidebar-footer-copy { display: none; }
+.app-shell.sidebar-collapsed .workspace-label, .app-shell.sidebar-collapsed .nav-label, .app-shell.sidebar-collapsed .sidebar-footer-copy, .app-shell.sidebar-collapsed #sidebarToggleText { display: none; }
 .app-shell.sidebar-collapsed .workspace-head { justify-content: center; }
 .app-shell.sidebar-collapsed .sidebar-toggle { width: 42px; padding: 9px 0; }
-.app-shell.sidebar-collapsed .workspace-nav a { padding: 12px 6px; text-align: center; font-size: 0; }
-.app-shell.sidebar-collapsed .workspace-nav a::after { content: attr(data-short); font-size: 13px; font-weight: 750; }
+.app-shell.sidebar-collapsed .workspace-nav a { padding: 12px 6px; justify-content: center; }
+.app-shell.sidebar-collapsed .nav-icon { margin: 0; font-size: 18px; }
 .app-shell.sidebar-collapsed .sidebar-footer { padding-left: 0; padding-right: 0; }
 .app-shell.sidebar-collapsed .sidebar-footer-row { justify-content: center; }
 .workspace-sidebar { position: sticky; top: 28px; height: calc(100vh - 56px); background: var(--sidebar); color: #f4f2ff; border-radius: 24px; padding: 24px 18px; display: flex; flex-direction: column; box-shadow: 0 18px 45px rgba(39, 35, 63, .22); }
@@ -45,7 +46,8 @@ button { cursor: pointer; }
 .sidebar-toggle { border: 1px solid rgba(255,255,255,.13); background: rgba(255,255,255,.07); color: #d7d4e7; border-radius: 10px; padding: 7px 9px; font-size: 11px; font-weight: 700; transition: background .18s ease; }
 .sidebar-toggle:hover { background: rgba(255,255,255,.13); }
 .workspace-nav { display: grid; gap: 5px; }
-.workspace-nav a { color: var(--sidebar-muted); text-decoration: none; padding: 12px 14px; border-radius: 12px; font-size: 14px; font-weight: 650; transition: background .18s ease, color .18s ease, transform .18s ease; }
+.workspace-nav a { color: var(--sidebar-muted); text-decoration: none; padding: 12px 14px; border-radius: 12px; font-size: 14px; font-weight: 650; display: flex; align-items: center; gap: 11px; transition: background .18s ease, color .18s ease, transform .18s ease; }
+.nav-icon { width: 18px; flex: 0 0 18px; text-align: center; font-size: 16px; line-height: 1; }
 .workspace-nav a:hover { color: white; background: rgba(255,255,255,.08); transform: translateX(2px); }
 .workspace-nav a.active { background: var(--primary); color: #fff; box-shadow: 0 8px 18px rgba(101,87,232,.28); }
 .sidebar-footer { margin-top: auto; border-top: 1px solid rgba(255,255,255,.1); padding: 18px 10px 2px; }
@@ -154,6 +156,7 @@ body.dark-mode {
   .app-shell, .app-shell.sidebar-collapsed { padding: 16px; grid-template-columns: 1fr; gap: 16px; }
   .app-shell.sidebar-collapsed .workspace-sidebar { padding: 14px; }
   .app-shell.sidebar-collapsed .workspace-label, .app-shell.sidebar-collapsed .nav-label { display: inline; }
+  .app-shell.sidebar-collapsed #sidebarToggleText { display: inline; }
   .app-shell.sidebar-collapsed .workspace-head { justify-content: space-between; }
   .app-shell.sidebar-collapsed .workspace-nav a { padding: 10px 12px; font-size: 14px; }
   .app-shell.sidebar-collapsed .workspace-nav a::after { content: none; }
@@ -186,13 +189,13 @@ body.dark-mode {
   <aside class="workspace-sidebar">
     <div class="workspace-head">
       <div class="workspace-label">工作区</div>
-      <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="收缩工作区" title="收缩工作区"><span id="sidebarToggleText">收起</span></button>
+      <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="收缩工作区" title="收缩工作区"><i class="bi bi-layout-sidebar-inset nav-icon" aria-hidden="true"></i><span id="sidebarToggleText">收起</span></button>
     </div>
     <nav class="workspace-nav" id="workspaceNav">
-      <a href="#overview" class="active" data-view="dashboard" data-short="总" title="总览"><span class="nav-label">总览</span></a>
-      <a href="#records" data-view="dashboard" data-short="播" title="播放记录"><span class="nav-label">播放记录</span></a>
-      <a href="#sync-settings" data-view="dashboard" data-short="同" title="同步设置"><span class="nav-label">同步设置</span></a>
-      <a href="#bangumi-settings" data-view="bangumi" data-short="B" title="Bangumi"><span class="nav-label">Bangumi</span></a>
+      <a href="#overview" class="active" data-view="dashboard" title="总览"><i class="bi bi-grid-1x2-fill nav-icon" aria-hidden="true"></i><span class="nav-label">总览</span></a>
+      <a href="#records" data-view="dashboard" title="播放记录"><i class="bi bi-play-circle nav-icon" aria-hidden="true"></i><span class="nav-label">播放记录</span></a>
+      <a href="#sync-settings" data-view="sync" title="同步设置"><i class="bi bi-arrow-repeat nav-icon" aria-hidden="true"></i><span class="nav-label">同步设置</span></a>
+      <a href="#bangumi-settings" data-view="bangumi" title="Bangumi"><i class="bi bi-collection-play nav-icon" aria-hidden="true"></i><span class="nav-label">Bangumi</span></a>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-footer-row">
@@ -237,35 +240,11 @@ body.dark-mode {
       </section>
 
       <div class="right-column">
-        <section class="panel" id="sync-settings">
-          <div class="panel-heading"><h2>同步控制</h2><span class="panel-meta" id="syncModeText">手动模式</span></div>
-          <div class="control-stack">
-            <div class="control-box">
-              <div class="form-group">
-                <label for="syncMode">同步模式</label>
-                <select id="syncMode" onchange="updateSyncMode('mode')"><option value="manual">手动同步</option><option value="auto">自动同步</option></select>
-              </div>
-              <div class="form-group" id="intervalGroup" style="display:none;">
-                <label for="syncInterval">同步间隔</label>
-                <select id="syncInterval" autocomplete="off" onchange="updateSyncMode('interval')">
-                  <option value="60" {% if config.get('sync_interval', 300) == 60 %}selected{% endif %}>1分钟</option>
-                  <option value="300" {% if config.get('sync_interval', 300) == 300 %}selected{% endif %}>5分钟</option>
-                  <option value="900" {% if config.get('sync_interval', 300) == 900 %}selected{% endif %}>15分钟</option>
-                  <option value="3600" {% if config.get('sync_interval', 300) == 3600 %}selected{% endif %}>1小时</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-box">
-              <div class="control-row">
-                <div><span class="control-title">容器启动后恢复</span><span class="control-help">开启后重启容器会继续运行自动同步。</span></div>
-                <label class="switch" aria-label="容器启动后自动同步"><input type="checkbox" id="autoStartOnBoot" onchange="updateSyncMode('boot')"><span class="slider"></span></label>
-              </div>
-            </div>
-          </div>
-          <div class="action-grid">
-            <button class="btn btn-primary" id="btnSync" onclick="startSync()">立即同步</button>
-            <button class="btn btn-danger" id="btnStop" onclick="stopSync()" disabled>停止</button>
-            <button class="btn btn-secondary" onclick="if(confirm('确定要清空本地同步记忆吗？\n\n换绑新的 Bangumi 账号后可使用此操作。')) resetCache()">重置记忆</button>
+        <section class="panel" id="filter-settings">
+          <div class="panel-heading"><h2>同步筛选</h2><span class="panel-meta">控制记录范围</span></div>
+          <div class="filter-box">
+            <div class="form-group"><label for="userSelect">选择用户</label><select id="userSelect" onchange="applyFilter()"><option value="all">全部用户</option></select></div>
+            <div class="form-group"><label for="timeRange">时间范围</label><select id="timeRange" onchange="applyFilter()"><option value="all">全部</option><option value="1month">最近1个月</option><option value="1week">最近一周</option><option value="1day">最近一天</option></select></div>
           </div>
         </section>
 
@@ -276,16 +255,49 @@ body.dark-mode {
       </div>
     </div>
 
-    <div class="settings-grid single-column">
-      <section class="panel" id="filter-settings">
-        <div class="panel-heading"><h2>同步筛选</h2><span class="panel-meta">控制记录范围</span></div>
-        <div class="filter-box">
-          <div class="form-group"><label for="userSelect">选择用户</label><select id="userSelect" onchange="applyFilter()"><option value="all">全部用户</option></select></div>
-          <div class="form-group"><label for="timeRange">时间范围</label><select id="timeRange" onchange="applyFilter()"><option value="all">全部</option><option value="1month">最近1个月</option><option value="1week">最近一周</option><option value="1day">最近一天</option></select></div>
+    </div>
+
+    <section class="page-view bangumi-page" id="syncPage" hidden>
+      <header class="page-header">
+        <div>
+          <h1>同步设置</h1>
+          <p>管理同步模式、执行间隔与容器启动行为。</p>
+        </div>
+        <div class="bangumi-page-actions"><button class="btn btn-secondary" onclick="showDashboard('#overview')">返回总览</button></div>
+      </header>
+      <section class="panel" id="sync-settings">
+        <div class="panel-heading"><h2>同步控制</h2><span class="panel-meta" id="syncModeText">手动模式</span></div>
+        <div class="control-stack">
+          <div class="control-box">
+            <div class="form-group">
+              <label for="syncMode">同步模式</label>
+              <select id="syncMode" onchange="updateSyncMode('mode')"><option value="manual">手动同步</option><option value="auto">自动同步</option></select>
+            </div>
+            <div class="form-group" id="intervalGroup" style="display:none;">
+              <label for="syncInterval">同步间隔</label>
+              <select id="syncInterval" autocomplete="off" onchange="updateSyncMode('interval')">
+                <option value="60" {% if config.get('sync_interval', 300) == 60 %}selected{% endif %}>1分钟</option>
+                <option value="300" {% if config.get('sync_interval', 300) == 300 %}selected{% endif %}>5分钟</option>
+                <option value="900" {% if config.get('sync_interval', 300) == 900 %}selected{% endif %}>15分钟</option>
+                <option value="3600" {% if config.get('sync_interval', 300) == 3600 %}selected{% endif %}>1小时</option>
+              </select>
+            </div>
+          </div>
+          <div class="control-box">
+            <div class="control-row">
+              <div><span class="control-title">容器启动后恢复</span><span class="control-help">开启后重启容器会继续运行自动同步。</span></div>
+              <label class="switch" aria-label="容器启动后自动同步"><input type="checkbox" id="autoStartOnBoot" onchange="updateSyncMode('boot')"><span class="slider"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="action-grid">
+          <button class="btn btn-primary" id="btnSync" onclick="startSync()">立即同步</button>
+          <button class="btn btn-danger" id="btnStop" onclick="stopSync()" disabled>停止</button>
+          <button class="btn btn-secondary" onclick="if(confirm('确定要清空本地同步记忆吗？\n\n换绑新的 Bangumi 账号后可使用此操作。')) resetCache()">重置记忆</button>
         </div>
       </section>
-    </div>
-    </div>
+
+    </section>
 
     <section class="page-view bangumi-page" id="bangumiPage" hidden>
       <header class="page-header">
@@ -310,7 +322,7 @@ function showToast(msg) { const c=document.getElementById('toastContainer'); con
 async function init(){ await loadUsers(); await loadConfig(); await load(); await loadSyncStatus(); setInterval(getStatus,3000); setInterval(loadSyncStatus,5000); setInterval(load,60000); connectLogs(); initNavigation(); }
 async function loadConfig(){ try{const r=await fetch('/api/config?_t='+Date.now());const d=await r.json();if(d.bangumi_token)document.getElementById('token').value=d.bangumi_token;if(d.min_percent)document.getElementById('pct').value=d.min_percent;if(d.user_filter){document.getElementById('userSelect').value=d.user_filter;currentFilter.user=d.user_filter;}if(d.time_range){document.getElementById('timeRange').value=d.time_range;currentFilter.range=d.time_range;}}catch(e){} }
 async function loadUsers(){ try{const r=await fetch('/api/users');const d=await r.json();if(d.success&&d.data){const s=document.getElementById('userSelect');s.innerHTML='<option value="all">全部用户</option>';d.data.forEach(u=>{const o=document.createElement('option');o.value=u.id;o.textContent=u.name;s.appendChild(o);});if(currentFilter.user!=='all')s.value=currentFilter.user;}}catch(e){} }
-async function load(){ try{const r=await fetch('/api/records?user='+encodeURIComponent(currentFilter.user)+'&range='+encodeURIComponent(currentFilter.range));const d=await r.json();if(d.error)return;const tb=document.getElementById('tbody');tb.innerHTML='';let p=0;d.records.forEach(x=>{if(x.status==='已看完')p++;const tr=document.createElement('tr');tr.innerHTML='<td>'+x.play_time+'</td><td><strong>'+x.media_name+'</strong><div class="episode">'+(x.episode_title||'')+'</div></td><td>第 '+x.episode_num+' 集</td><td>'+x.percent+'%</td><td><span class="badge '+(x.status==='已看完'?'badge-green':'badge-yellow')+'">'+x.status+'</span></td>';tb.appendChild(tr);});document.getElementById('pendingCount').textContent=p;document.getElementById('dbStatus').textContent='正常';}catch(e){} }
+async function load(){ try{const r=await fetch('/api/records?user='+encodeURIComponent(currentFilter.user)+'&range='+encodeURIComponent(currentFilter.range));const d=await r.json();if(d.error)return;const tb=document.getElementById('tbody');tb.innerHTML='';let p=0;d.records.forEach(x=>{if(x.status==='已看完')p++;const tr=document.createElement('tr');tr.innerHTML='<td>'+x.play_time+'</td><td><strong>'+x.media_name+'</strong></td><td>第 '+x.episode_num+' 集</td><td>'+x.percent+'%</td><td><span class="badge '+(x.status==='已看完'?'badge-green':'badge-yellow')+'">'+x.status+'</span></td>';tb.appendChild(tr);});document.getElementById('pendingCount').textContent=p;document.getElementById('dbStatus').textContent='正常';}catch(e){} }
 async function getStatus(){ try{const r=await fetch('/api/status');const d=await r.json();const st=document.getElementById('syncState');if(d.syncing){st.textContent='同步中';st.classList.add('syncing');document.getElementById('btnSync').disabled=true;document.getElementById('btnStop').disabled=false;}else{st.textContent='空闲';st.classList.remove('syncing');document.getElementById('btnSync').disabled=false;document.getElementById('btnStop').disabled=true;}}catch(e){} }
 async function loadSyncStatus(){ try{const r=await fetch('/api/sync/status?_t='+Date.now());const d=await r.json();if(d.mode)document.getElementById('syncMode').value=d.mode;document.getElementById('autoStartOnBoot').checked=d.auto_start_on_boot===true;if(d.mode==='auto'){document.getElementById('syncModeText').textContent='自动模式';document.getElementById('syncModeNote').textContent='自动模式已开启';document.getElementById('intervalGroup').style.display='block';}else{document.getElementById('syncModeText').textContent='手动模式';document.getElementById('syncModeNote').textContent='手动模式';document.getElementById('intervalGroup').style.display='none';}if(d.last_sync_time)document.getElementById('lastSync').textContent=d.last_sync_time.split(' ')[1].substring(0,5);}catch(e){console.error(e);} }
 async function updateSyncMode(source='mode'){const modeSelect=document.getElementById('syncMode');const bootToggle=document.getElementById('autoStartOnBoot');if(source==='boot')modeSelect.value=bootToggle.checked?'auto':'manual';else if(source==='mode')bootToggle.checked=modeSelect.value==='auto';const mode=bootToggle.checked?'auto':'manual';modeSelect.value=mode;const interval=parseInt(document.getElementById('syncInterval').value);const sel=document.getElementById('syncInterval');const intervalText=sel.options[sel.selectedIndex].text;await fetch('/api/sync/mode',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode,interval,auto_start_on_boot:bootToggle.checked})});loadSyncStatus();showToast(mode==='auto'?'已开启自动同步，容器重启后将自动恢复（'+intervalText+'）':'已切换为手动模式，容器重启后不自动同步');}
@@ -323,10 +335,12 @@ async function connectLogs(){const d=document.getElementById('logs');try{const r
 function initTheme(){const isDark=localStorage.getItem('theme')==='dark';document.body.classList.toggle('dark-mode',isDark);document.getElementById('themeState').textContent=isDark?'夜间模式':'日间模式';}
 function toggleTheme(){document.body.classList.toggle('dark-mode');const isDark=document.body.classList.contains('dark-mode');localStorage.setItem('theme',isDark?'dark':'light');document.getElementById('themeState').textContent=isDark?'夜间模式':'日间模式';}
 function setActiveNav(target){const links=[...document.querySelectorAll('.workspace-nav a')];links.forEach(link=>link.classList.toggle('active',link===target));}
-function showDashboard(hash='#overview'){document.getElementById('dashboardPage').hidden=false;document.getElementById('bangumiPage').hidden=true;const target=document.querySelector('.workspace-nav a[href="'+hash+'"]')||document.querySelector('.workspace-nav a[href="#overview"]');setActiveNav(target);if(location.hash!==hash)history.pushState(null,'',hash);requestAnimationFrame(()=>{const section=document.querySelector(hash);if(section)section.scrollIntoView({behavior:'smooth',block:'start'});});}
-function showBangumi(){document.getElementById('dashboardPage').hidden=true;document.getElementById('bangumiPage').hidden=false;const target=document.querySelector('.workspace-nav a[href="#bangumi-settings"]');setActiveNav(target);if(location.hash!=='#bangumi-settings')history.pushState(null,'','#bangumi-settings');window.scrollTo({top:0,behavior:'smooth'});}
-function applyRoute(){if(location.hash==='#bangumi-settings')showBangumi();else showDashboard(location.hash&&document.querySelector(location.hash)?location.hash:'#overview');}
-function initNavigation(){document.querySelectorAll('.workspace-nav a').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();if(link.dataset.view==='bangumi')showBangumi();else showDashboard(link.getAttribute('href'));}));window.addEventListener('popstate',applyRoute);applyRoute();}
+function hideSettingsPages(){document.getElementById('syncPage').hidden=true;document.getElementById('bangumiPage').hidden=true;}
+function showDashboard(hash='#overview'){document.getElementById('dashboardPage').hidden=false;hideSettingsPages();const target=document.querySelector('.workspace-nav a[href="'+hash+'"]')||document.querySelector('.workspace-nav a[href="#overview"]');setActiveNav(target);if(location.hash!==hash)history.pushState(null,'',hash);requestAnimationFrame(()=>{const section=document.querySelector(hash);if(section)section.scrollIntoView({behavior:'smooth',block:'start'});});}
+function showSyncSettings(){document.getElementById('dashboardPage').hidden=true;document.getElementById('syncPage').hidden=false;document.getElementById('bangumiPage').hidden=true;const target=document.querySelector('.workspace-nav a[href="#sync-settings"]');setActiveNav(target);if(location.hash!=='#sync-settings')history.pushState(null,'','#sync-settings');window.scrollTo({top:0,behavior:'smooth'});}
+function showBangumi(){document.getElementById('dashboardPage').hidden=true;document.getElementById('syncPage').hidden=true;document.getElementById('bangumiPage').hidden=false;const target=document.querySelector('.workspace-nav a[href="#bangumi-settings"]');setActiveNav(target);if(location.hash!=='#bangumi-settings')history.pushState(null,'','#bangumi-settings');window.scrollTo({top:0,behavior:'smooth'});}
+function applyRoute(){if(location.hash==='#sync-settings')showSyncSettings();else if(location.hash==='#bangumi-settings')showBangumi();else showDashboard(location.hash&&document.querySelector(location.hash)?location.hash:'#overview');}
+function initNavigation(){document.querySelectorAll('.workspace-nav a').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();if(link.dataset.view==='sync')showSyncSettings();else if(link.dataset.view==='bangumi')showBangumi();else showDashboard(link.getAttribute('href'));}));window.addEventListener('popstate',applyRoute);applyRoute();}
 function initSidebar(){const collapsed=localStorage.getItem('sidebarCollapsed')==='true';document.querySelector('.app-shell').classList.toggle('sidebar-collapsed',collapsed);updateSidebarToggle(collapsed);}
 function updateSidebarToggle(collapsed){const button=document.getElementById('sidebarToggle');document.getElementById('sidebarToggleText').textContent=collapsed?'展开':'收起';button.setAttribute('aria-label',collapsed?'展开工作区':'收缩工作区');button.title=collapsed?'展开工作区':'收缩工作区';}
 function toggleSidebar(){const shell=document.querySelector('.app-shell');const collapsed=!shell.classList.contains('sidebar-collapsed');shell.classList.toggle('sidebar-collapsed',collapsed);localStorage.setItem('sidebarCollapsed',collapsed?'true':'false');updateSidebarToggle(collapsed);}
