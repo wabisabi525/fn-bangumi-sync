@@ -137,7 +137,10 @@ class WebUiContractTests(unittest.TestCase):
         self.assertNotIn('episode_title', html)
         self.assertNotIn('刷新记录', html)
         self.assertIn('.workspace-nav a.active { background: var(--primary); color: #fff; box-shadow: none; }', html)
-        self.assertLess(html.index('id="logs-panel"'), html.index('id="filter-settings"'))
+        self.assertLess(html.index('id="filter-settings"'), html.index('id="logs-panel"'))
+        self.assertIn('id="sidebarToggleText"', html)
+        self.assertIn('grid-template-columns .28s cubic-bezier', html)
+        self.assertIn('max-width .28s ease', html)
 
 
 if __name__ == '__main__':
